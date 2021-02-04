@@ -1,7 +1,7 @@
 {
   "name": "cordova-promise-fs",
   "version": "1.2.5",
-  "description": "Cordova FileSystem convienence functions that return promises.",
+  "description": "Cordova FileSystem convenience functions that return promises.",
   "main": "index.js",
   "scripts": {
     "prepublish": "webpack index.js dist/CordovaPromiseFS.js --output-library CordovaPromiseFS --output-library-target var",
