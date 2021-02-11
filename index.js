@@ -109,18 +109,27 @@ function __createDir(rootDirEntry, folders, success,error) {
 			  xhr.open('GET', url, true);
 			  xhr.responseType = "arraybuffer";
 			  xhr.onload = function() {
-				  if (xhr.readyState == 4) {
-					  if(xhr.status === 200 && !this._aborted){
-						var mimeType = xhr.responseHeaders["Content-Type"]
-						var fileToWrite = new Blob([xhr.response], { 
-						  type: mimeType
-						});
-						write(file,fileToWrite,mimeType).then(win,fail);
-					  } else {
-						fail(xhr.status);
-					  }
-				  }
-			  };
+				if (xhr.readyState == 4) {
+					if(xhr.status === 200 && !this._aborted){
+					  var headers = xhr.getAllResponseHeaders();
+					  var headerInfo = headers.trim().split(/[\r\n]+/);
+					  var headerMap = {};
+					  headerInfo.forEach(function (line) {
+						  var parts = line.split(': ');
+						  var header = parts.shift();
+						  var value = parts.join(': ');
+						  headerMap[header] = value;
+					  });
+					  var contentType = headerMap["content-type"];
+					  var fileToWrite = new Blob([xhr.response], { 
+						type: contentType
+					  });
+					  write(file,fileToWrite,contentType).then(win,fail);
+					} else {
+					  fail(xhr.status);
+					}
+				}
+			};
 			  xhr.send();
 			  return xhr;
 		  };
